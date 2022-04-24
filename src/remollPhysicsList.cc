@@ -1,5 +1,7 @@
 #include "remollPhysicsList.hh"
 
+#include "remollPhysListEmStandard.hh"
+
 #include "G4PhysListFactory.hh"
 #include "G4ParallelWorldPhysics.hh"
 #include "G4OpticalPhysics.hh"
@@ -79,6 +81,23 @@ remollPhysicsList::remollPhysicsList()
       &remollPhysicsList::DisableOpticalPhysics,
       "Disable optical physics")
               .SetStates(G4State_PreInit);
+
+
+
+  fOpticalMessenger.DeclareMethod(
+      "enable",
+      &remollPhysicsList::EnableEmStandardPhysics,
+      "Enable EM physics")
+              .SetStates(G4State_PreInit);
+  fOpticalMessenger.DeclareMethod(
+      "disable",
+      &remollPhysicsList::DisableEmStandardPhysics,
+      "Disable EM physics")
+              .SetStates(G4State_PreInit);
+
+
+
+
 
   fStepLimiterMessenger.DeclareMethod(
       "enable",
@@ -204,6 +223,67 @@ void remollPhysicsList::DisableOpticalPhysics()
   delete fOpticalPhysics;
   fOpticalPhysics = 0;
 }
+
+
+
+void remollPhysicsList::SetEmPhysics(G4bool flag)
+{
+  if (flag) EnableEmStandardPhysics();
+  else     DisableEmStandardPhysics();
+}
+
+void remollPhysicsList::EnableEmStandardPhysics()
+{
+  if (fEmStandardPhysics != nullptr) {
+    G4cout << "EM stardard physics already active" << G4endl;
+    return;
+  }
+
+  // Print output
+  if (GetVerboseLevel() > 0)
+    G4cout << "Registering EM stardard physics" << G4endl;
+
+  fEmStandardPhysics = new PhysListEmStandard(GetVerboseLevel());
+
+  // Create optical physics
+  // Register existing physics
+  RegisterPhysics(fEmStandardPhysics);
+
+}
+
+void remollPhysicsList::DisableEmStandardPhysics()
+{
+
+  if (fEmStandardPhysics == nullptr) {
+    G4cout << "EM standard physics not active" << G4endl;
+    return;
+  }
+
+  // Print output
+  if (GetVerboseLevel() > 0)
+    G4cout << "Removing EM standard physics" << G4endl;
+
+  // Remove photo electroc effect physics
+  RemovePhysics(fEmStandardPhysics);
+
+  // Delete photo electroc effect physics
+  delete fEmStandardPhysics;
+  fEmStandardPhysics = 0;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void remollPhysicsList::SetStepLimiterPhysics(G4bool flag)
 {

@@ -30,6 +30,14 @@ class remollPhysicsList: public G4VModularPhysicsList
     // Disable optical physics
     void DisableOpticalPhysics();
 
+    // Set EM physics
+    void SetEmPhysics(G4bool flag);
+    // Enable EM physics
+    void EnableEmStandardPhysics();
+    // Disable EM physics
+    void DisableEmStandardPhysics();
+
+
     // Set step limiter physics
     void SetStepLimiterPhysics(G4bool flag);
     // Enable step limiter physics
@@ -48,6 +56,9 @@ class remollPhysicsList: public G4VModularPhysicsList
     G4VPhysicsConstructor* fParallelPhysics;
     G4VPhysicsConstructor* fOpticalPhysics;
     G4VPhysicsConstructor* fStepLimiterPhysics;
+
+    G4VPhysicsConstructor* fEmStandardPhysics;
+
 
     // Deleting an unused physics list also deletes particles, causing
     // all kinds of issues with new reference physics lists
