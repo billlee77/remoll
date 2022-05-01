@@ -82,6 +82,11 @@ class remollPhysicsList: public G4VModularPhysicsList
       this,
       "/remoll/physlist/steplimiter/",
       "Remoll step limiter properties"};
+    G4GenericMessenger fEmMessenger{
+      this,
+      "/remoll/physlist/EM/",
+      "Remoll EM physics properties"};
+
 };
 
 #endif

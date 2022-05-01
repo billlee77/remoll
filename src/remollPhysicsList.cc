@@ -22,7 +22,8 @@ remollPhysicsList::remollPhysicsList()
   fReferencePhysList(0),
   fParallelPhysics(0),
   fOpticalPhysics(0),
-  fStepLimiterPhysics(0)
+  fStepLimiterPhysics(0),
+  fEmStandardPhysics(0)
 {
   // Let users know to ignore the warning by Particle HP package
   G4cout << "remoll: Since the high precision neutron simulation in the some physics lists  " << G4endl;
@@ -39,10 +40,12 @@ remollPhysicsList::remollPhysicsList()
   // Set and print default status of other physics
   EnableStepLimiterPhysics();
   EnableParallelPhysics();
+  EnableEmStandardPhysics();
   DisableOpticalPhysics();
   G4cout << "remoll: step limiter physics is " << (fStepLimiterPhysics != nullptr? "enabled":"disabled") << G4endl;
   G4cout << "remoll: parallel physics is "     << (fParallelPhysics != nullptr?    "enabled":"disabled") << G4endl;
   G4cout << "remoll: optical physics is "      << (fOpticalPhysics != nullptr?     "enabled":"disabled") << G4endl;
+  G4cout << "remoll: Em physics is "      << (fEmStandardPhysics != nullptr?     "enabled":"disabled") << G4endl;
 
   // Create commands
   fPhysListMessenger.DeclareMethod(
@@ -81,23 +84,19 @@ remollPhysicsList::remollPhysicsList()
       &remollPhysicsList::DisableOpticalPhysics,
       "Disable optical physics")
               .SetStates(G4State_PreInit);
+  
+//  exit(0);
 
-
-
-  fOpticalMessenger.DeclareMethod(
+  fEmMessenger.DeclareMethod(
       "enable",
       &remollPhysicsList::EnableEmStandardPhysics,
       "Enable EM physics")
               .SetStates(G4State_PreInit);
-  fOpticalMessenger.DeclareMethod(
+  fEmMessenger.DeclareMethod(
       "disable",
       &remollPhysicsList::DisableEmStandardPhysics,
       "Disable EM physics")
               .SetStates(G4State_PreInit);
-
-
-
-
 
   fStepLimiterMessenger.DeclareMethod(
       "enable",
