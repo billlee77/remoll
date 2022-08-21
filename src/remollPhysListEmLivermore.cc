@@ -84,7 +84,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysListEmLivermore::PhysListEmLivermore(const G4String& name)
-  :  G4VPhysicsConstructor(name)
+  :  G4VPhysicsConstructor("LivermoreEM")
 {
     G4EmParameters* param = G4EmParameters::Instance();
     param->SetDefaults();
@@ -108,6 +108,9 @@ void PhysListEmLivermore::ConstructProcess()
 {
   // Add Livermore EM Processes 
 
+
+//  exit(0);
+
   auto particleIterator=GetParticleIterator();
   particleIterator->reset();
   while( (*particleIterator)() ){
@@ -117,33 +120,33 @@ void PhysListEmLivermore::ConstructProcess()
 
     //Applicability range for Livermore models
     //for higher energies, the Standard models are used   
-    G4double highEnergyLimit = 1*GeV;
+    G4double highEnergyLimit = 0.25*GeV;
          
     if (particleName == "gamma") {
       // gamma         
 
-      G4PhotoElectricEffect* phot = new G4PhotoElectricEffect();
-      G4LivermorePhotoElectricModel* 
-      photModel = new G4LivermorePhotoElectricModel();
-      photModel->SetHighEnergyLimit(highEnergyLimit);
-      phot->AddEmModel(0, photModel);
-      ///list->RegisterProcess(phot, particle);
-      pmanager->AddDiscreteProcess(phot);
-      
-      G4ComptonScattering* compt = new G4ComptonScattering();
-      G4LivermoreComptonModel* 
-      comptModel = new G4LivermoreComptonModel();
-      comptModel->SetHighEnergyLimit(highEnergyLimit);
-      compt->AddEmModel(0, comptModel);
-      pmanager->AddDiscreteProcess(compt);
-
-      G4GammaConversion* conv = new G4GammaConversion();
-      G4LivermoreGammaConversionModel* 
-      convModel = new G4LivermoreGammaConversionModel();
-      convModel->SetHighEnergyLimit(highEnergyLimit);
-      conv->AddEmModel(0, convModel);
-      pmanager->AddDiscreteProcess(conv);
-      
+//      G4PhotoElectricEffect* phot = new G4PhotoElectricEffect();
+//      G4LivermorePhotoElectricModel* 
+//      photModel = new G4LivermorePhotoElectricModel();
+//      photModel->SetHighEnergyLimit(highEnergyLimit);
+//      phot->AddEmModel(0, photModel);
+//      ///list->RegisterProcess(phot, particle);
+//      pmanager->AddDiscreteProcess(phot);
+//      
+//      G4ComptonScattering* compt = new G4ComptonScattering();
+//      G4LivermoreComptonModel* 
+//      comptModel = new G4LivermoreComptonModel();
+//      comptModel->SetHighEnergyLimit(highEnergyLimit);
+//      compt->AddEmModel(0, comptModel);
+//      pmanager->AddDiscreteProcess(compt);
+//
+//      G4GammaConversion* conv = new G4GammaConversion();
+//      G4LivermoreGammaConversionModel* 
+//      convModel = new G4LivermoreGammaConversionModel();
+//      convModel->SetHighEnergyLimit(highEnergyLimit);
+//      conv->AddEmModel(0, convModel);
+//      pmanager->AddDiscreteProcess(conv);
+//      
       G4RayleighScattering* rayl = new G4RayleighScattering();
       G4LivermoreRayleighModel* 
       raylModel = new G4LivermoreRayleighModel();
@@ -181,7 +184,7 @@ void PhysListEmLivermore::ConstructProcess()
     else if( particleName == "mu+" || 
                particleName == "mu-"    ) {
       //muon  
-      pmanager->AddProcess(new G4MuIonisation,      -1,-1, 1);
+//      pmanager->AddProcess(new G4MuIonisation,      -1,-1, 1);
       pmanager->AddProcess(new G4MuBremsstrahlung,  -1,-1, 2);
       pmanager->AddProcess(new G4MuPairProduction,  -1,-1, 3);       
      

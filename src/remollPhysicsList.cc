@@ -1,7 +1,5 @@
 #include "remollPhysicsList.hh"
 
-#include "remollPhysListEmStandard.hh"
-
 #include "G4PhysListFactory.hh"
 #include "G4ParallelWorldPhysics.hh"
 #include "G4OpticalPhysics.hh"
@@ -17,13 +15,16 @@
 #include "G4StepLimiterPhysics.hh"
 #endif
 
+#include "G4EmStandardPhysics_option3.hh"
+#include "remollPhysListEmStandard.hh"
+#include "remollPhysListEmLivermore.hh"
+
 remollPhysicsList::remollPhysicsList()
 : G4VModularPhysicsList(),
   fReferencePhysList(0),
   fParallelPhysics(0),
   fOpticalPhysics(0),
-  fStepLimiterPhysics(0),
-  fEmStandardPhysics(0)
+  fStepLimiterPhysics(0)
 {
   // Let users know to ignore the warning by Particle HP package
   G4cout << "remoll: Since the high precision neutron simulation in the some physics lists  " << G4endl;
@@ -40,12 +41,10 @@ remollPhysicsList::remollPhysicsList()
   // Set and print default status of other physics
   EnableStepLimiterPhysics();
   EnableParallelPhysics();
-  EnableEmStandardPhysics();
   DisableOpticalPhysics();
   G4cout << "remoll: step limiter physics is " << (fStepLimiterPhysics != nullptr? "enabled":"disabled") << G4endl;
   G4cout << "remoll: parallel physics is "     << (fParallelPhysics != nullptr?    "enabled":"disabled") << G4endl;
   G4cout << "remoll: optical physics is "      << (fOpticalPhysics != nullptr?     "enabled":"disabled") << G4endl;
-  G4cout << "remoll: Em physics is "      << (fEmStandardPhysics != nullptr?     "enabled":"disabled") << G4endl;
 
   // Create commands
   fPhysListMessenger.DeclareMethod(
@@ -83,19 +82,6 @@ remollPhysicsList::remollPhysicsList()
       "disable",
       &remollPhysicsList::DisableOpticalPhysics,
       "Disable optical physics")
-              .SetStates(G4State_PreInit);
-  
-//  exit(0);
-
-  fEmMessenger.DeclareMethod(
-      "enable",
-      &remollPhysicsList::EnableEmStandardPhysics,
-      "Enable EM physics")
-              .SetStates(G4State_PreInit);
-  fEmMessenger.DeclareMethod(
-      "disable",
-      &remollPhysicsList::DisableEmStandardPhysics,
-      "Disable EM physics")
               .SetStates(G4State_PreInit);
 
   fStepLimiterMessenger.DeclareMethod(
@@ -223,67 +209,6 @@ void remollPhysicsList::DisableOpticalPhysics()
   fOpticalPhysics = 0;
 }
 
-
-
-void remollPhysicsList::SetEmPhysics(G4bool flag)
-{
-  if (flag) EnableEmStandardPhysics();
-  else     DisableEmStandardPhysics();
-}
-
-void remollPhysicsList::EnableEmStandardPhysics()
-{
-  if (fEmStandardPhysics != nullptr) {
-    G4cout << "EM stardard physics already active" << G4endl;
-    return;
-  }
-
-  // Print output
-  if (GetVerboseLevel() > 0)
-    G4cout << "Registering EM stardard physics" << G4endl;
-
-  fEmStandardPhysics = new PhysListEmStandard(GetVerboseLevel());
-
-  // Create optical physics
-  // Register existing physics
-  RegisterPhysics(fEmStandardPhysics);
-
-}
-
-void remollPhysicsList::DisableEmStandardPhysics()
-{
-
-  if (fEmStandardPhysics == nullptr) {
-    G4cout << "EM standard physics not active" << G4endl;
-    return;
-  }
-
-  // Print output
-  if (GetVerboseLevel() > 0)
-    G4cout << "Removing EM standard physics" << G4endl;
-
-  // Remove photo electroc effect physics
-  RemovePhysics(fEmStandardPhysics);
-
-  // Delete photo electroc effect physics
-  delete fEmStandardPhysics;
-  fEmStandardPhysics = 0;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void remollPhysicsList::SetStepLimiterPhysics(G4bool flag)
 {
   if (flag) EnableStepLimiterPhysics();
@@ -409,6 +334,18 @@ void remollPhysicsList::RegisterReferencePhysList(G4String name)
   fReferencePhysList->SetVerboseLevel(GetVerboseLevel());
   fReferencePhysListName = name;
 
+//  fReferencePhysList->ReplacePhysics(fEmPhysicsList);
+
+//   fReferencePhysList->RemovePhysics("G4EmStandard");
+
+//  fEmPhysicsList = new G4EmStandardPhysics_option3(verboseLevel);
+  fEmPhysicsList = new PhysListEmStandard(verboseLevel);
+//  fEmPhysicsList = new PhysListEmLivermore(verboseLevel);
+
+//  fReferencePhysList->ReplacePhysics(fEmPhysicsList);
+  fReferencePhysList->RegisterPhysics(fEmPhysicsList);
+
+
   // Register physics from this list
   G4int i = 0;
   G4VPhysicsConstructor* elem = 0;
@@ -421,10 +358,33 @@ void remollPhysicsList::RegisterReferencePhysList(G4String name)
       G4cout << "Registering " << elem->GetPhysicsName() << G4endl;
 
     // Register existing physics
-    RegisterPhysics(elem);
+
+
+    G4cout << "Registering " << elem->GetPhysicsName() << G4endl;
+
+	if (elem->GetPhysicsName() != "G4EmStandard")
+    	RegisterPhysics(elem);
+
   }
+
 
   // Blank space
   if (GetVerboseLevel() > 0)
     G4cout << G4endl;
 }
+
+//void remollPhysicsList::ConstructParticle()
+//{
+//}
+
+//void remollPhysicsList::ConstructProcess()
+//{
+////  exit(0);
+//  AddTransportation();
+//  fEmPhysicsList -> ConstructProcess();
+//}
+
+
+
+
+

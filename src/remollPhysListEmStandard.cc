@@ -37,7 +37,11 @@
 
 #include "G4ComptonScattering.hh"
 #include "G4GammaConversion.hh"
+
 #include "G4PhotoElectricEffect.hh"
+#include "G4LivermorePhotoElectricModel.hh"
+
+
 #include "G4RayleighScattering.hh"
 #include "G4KleinNishinaModel.hh"
 
@@ -74,6 +78,9 @@
 PhysListEmStandard::PhysListEmStandard(const G4String&)
    :  G4VPhysicsConstructor("local")
 {
+//  G4cout << "bbb" << G4endl;
+
+
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetDefaults();
   param->SetVerbose(1);
@@ -87,6 +94,7 @@ PhysListEmStandard::PhysListEmStandard(const G4String&)
   param->SetMuHadLateralDisplacement(true);
   param->SetFluo(true);
   SetPhysicsType(bElectromagnetic);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -98,22 +106,43 @@ PhysListEmStandard::~PhysListEmStandard()
 
 void PhysListEmStandard::ConstructProcess()
 {
+
+//  exit(0);
+
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
   
   // Add standard EM Processes
   //
   auto particleIterator=GetParticleIterator();
   particleIterator->reset();
+
+//  G4cout << "ccc" << G4endl;
+//  exit(0);
+
   while( (*particleIterator)() ){
     G4ParticleDefinition* particle = particleIterator->value();
     G4String particleName = particle->GetParticleName();
-     
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    G4double highEnergyLimit = 1*GeV;
+
     if (particleName == "gamma") {
 
-	  exit(0);
+//	  exit(0);
 
 
-      ph->RegisterProcess(new G4PhotoElectricEffect, particle);      
+      ph->RegisterProcess(new G4PhotoElectricEffect, particle); 
+
+
+
+//      G4PhotoElectricEffect* phot = new G4PhotoElectricEffect();
+//      G4LivermorePhotoElectricModel* 
+//      photModel = new G4LivermorePhotoElectricModel();
+//      photModel->SetHighEnergyLimit(highEnergyLimit);
+//      phot->AddEmModel(0, photModel);
+//      ///list->RegisterProcess(phot, particle);
+//      pmanager->AddDiscreteProcess(phot);
+
+     
       G4ComptonScattering* cs   = new G4ComptonScattering;
       cs->SetEmModel(new G4KleinNishinaModel());
       ph->RegisterProcess(cs, particle);

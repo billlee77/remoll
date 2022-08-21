@@ -50,6 +50,11 @@ class remollPhysicsList: public G4VModularPhysicsList
     void RemoveReferencePhysList();
     void RegisterReferencePhysList(G4String name);
 
+
+//	virtual void ConstructParticle();
+//	virtual void ConstructProcess();
+
+
   private:
     G4String fReferencePhysListName;
     G4VModularPhysicsList* fReferencePhysList;
@@ -58,6 +63,7 @@ class remollPhysicsList: public G4VModularPhysicsList
     G4VPhysicsConstructor* fStepLimiterPhysics;
 
     G4VPhysicsConstructor* fEmStandardPhysics;
+    G4VPhysicsConstructor* fEmPhysicsList;
 
 
     // Deleting an unused physics list also deletes particles, causing
