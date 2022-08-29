@@ -339,11 +339,11 @@ void remollPhysicsList::RegisterReferencePhysList(G4String name)
 //   fReferencePhysList->RemovePhysics("G4EmStandard");
 
 //  fEmPhysicsList = new G4EmStandardPhysics_option3(verboseLevel);
-  fEmPhysicsList = new PhysListEmStandard(verboseLevel);
-//  fEmPhysicsList = new PhysListEmLivermore(verboseLevel);
+//  fEmPhysicsList = new PhysListEmStandard(verboseLevel);
+  fEmPhysicsList = new PhysListEmLivermore(verboseLevel);
 
-//  fReferencePhysList->ReplacePhysics(fEmPhysicsList);
-  fReferencePhysList->RegisterPhysics(fEmPhysicsList);
+  fReferencePhysList->ReplacePhysics(fEmPhysicsList);
+//  fReferencePhysList->RegisterPhysics(fEmPhysicsList);
 
 
   // Register physics from this list
