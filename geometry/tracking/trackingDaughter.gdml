@@ -108,13 +108,13 @@
     <position name="Box_add0x5572e9992d80_pos" unit="mm" x="0" y="872" z="0"/>
   </intersection>
 
-  <subtraction name="AlMountFrame_log">
+  <subtraction name="logic_AlMountFrame">
     <first ref="Frame_Boc_add0x5572e9984930"/>
     <second ref="Box_add0x5572e9992d80"/>
   </subtraction>
 
 <!--
-  <box name="AlMountFrame_log" x="100" y="100" z="10" lunit="mm"/>
+  <box name="logic_AlMountFrame" x="100" y="100" z="10" lunit="mm"/>
 -->
 
 
@@ -127,7 +127,7 @@
 
   <volume name="logic_GEMFrame">
     <materialref ref="Al"/>
-    <solidref ref="AlMountFrame_log"/>
+    <solidref ref="logic_AlMountFrame"/>
     <auxiliary auxtype="SensDet" auxvalue="GEMFrame"/>
     <auxiliary auxtype="DetNo" auxvalue="520"/>
   </volume>
@@ -155,7 +155,7 @@
 
   <volume name="logic_GEMDetector">
     <materialref ref="G4_AIR"/>
-    <solidref ref="AlMountFrame_log"/>
+    <solidref ref="logic_AlMountFrame"/>
 
     <physvol name="GEMFrame_phys">
       <volumeref ref="logic_GEMFrame"/>
