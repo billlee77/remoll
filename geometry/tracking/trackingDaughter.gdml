@@ -5,7 +5,10 @@
 
 <define>
   <constant name="PHI" value="2*pi/7"/>
-  <constant name="ROTATE" value="0"/>
+  <constant name="OPERATION" value="PHI/4"/>
+
+
+  <constant name="ROTATE" value="OPERATION"/>
   <variable name="i" value="0"/>
 
   <quantity name="GEMThickness"   type="length" value="30" unit="mm"/>
