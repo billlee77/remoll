@@ -294,28 +294,35 @@
       </physvol>
       
     <!-- Front Tracking Detectors -->
+    <!--
     <physvol  name="GEM_Frame_1">
- <!--     <file name="tracking/trackingDaughter.gdml"/> -->
       <file name="tracking/trackingDaughter_layer_12.gdml"/>
       <positionref ref="trackingDetectorVirtualPlaneFront12_pos"/>
     </physvol>
+    -->
 
     <!-- Back Tracking Detectors -->
+    <!--
     <physvol name="GEM_Frame_2">
       <file name="tracking/trackingDaughter_layer_34.gdml"/>
       <positionref ref="trackingDetectorVirtualPlaneBack12_pos"/>
     </physvol>
+    -->
 
-
-    <!-- Back Tracking Detectors -->
+    <!-- Tracking Detectors -->
     <!--   <physvol>
       <file name="tracking/trackingDaughter.gdml"/>
       <positionref ref="trackingDetectorVirtualPlaneBack1_pos"/>
     </physvol>-->
 
+    <!-- Tracking Detectors -->
+    <physvol>
+      <file name="tracking/trackingDaughter_argon.gdml"/>
+      <positionref ref="trackingDetectorVirtualPlaneBack1_pos"/>
+    </physvol>
 
-      <!-- GEM Rotator -->
-      <physvol name="GemRotatorSupport1_phys">
+    <!-- GEM Rotator -->
+    <physvol name="GemRotatorSupport1_phys">
 	<volumeref ref="GemRotatorSupport1_log"/>
 	<position name="GemRotatorSupport1_pos" unit="mm" x="-248.33*2-248.33/2" y="-2980+1415.481/2" z="19132.69+400/2+1000/2"/>
       </physvol>
