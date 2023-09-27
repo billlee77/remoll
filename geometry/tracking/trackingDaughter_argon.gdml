@@ -4,16 +4,39 @@
       xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
 
 <define>
-  <constant name="PHI" value="2*pi/7"/>
-  <!--
-  <constant name="OPERATION" value="PHI/4"/>
-  -->
-  <constant name="OPERATION" value="3*PHI/4"/>
-  <constant name="OPERATION1" value="PHI/2"/>
 
   <!--
-  <constant name="ROTATE" value="OPERATION"/>
+  <constant name="PHI" value="2*pi/7"/ unit="radian">
+
+  <constant name="GEMFrameActivePhi"  type="angle" value="26.5" unit="deg"/>
+  <constant name="OPERATION" value="3*PHI/4"/ unit="radian" >
+  <constant name="OPERATIONPlus" value="OPERATION + GEMFrameActivePhi/2 + 2.04"/>
+  <constant name="OPERATIONMinus" value="OPERATION - GEMFrameActivePhi/2 - 2.04"/>
+
+  <constant name="PHI" value="2*pi/7"/ unit="radian">
   -->
+
+  <constant name="PHI" value="2*pi/7" unit="radian"/>
+
+  <!-- The active phi region converage: 26.5 Degree -->
+  <constant name="GEMFrameActivePhi" value="26.5*pi/180" unit="radian"/> 
+
+  <constant name="OPERATION" value="3*PHI/4" unit="radian" />
+  <constant name="OPERATIONPlus" value="OPERATION + GEMFrameActivePhi/2 + 2.04*pi/180" unit="radian"/>
+  <constant name="OPERATIONMinus" value="OPERATION - GEMFrameActivePhi/2 - 2.04*pi/180" unit="radian"/>
+
+  <!--
+  <constant name="GEMFrameActivePhi"  type="angle" value="26.5" unit="deg"/>
+  <constant name="OPERATION" value="3*PHI/4" unit="deg" />
+  <constant name="OPERATIONPlus" value="OPERATION + GEMFrameActivePhi/2 + 2.04" unit="deg"/>
+  <constant name="OPERATIONMinus" value="OPERATION - GEMFrameActivePhi/2 - 2.04" unit="deg"/>
+
+  <constant name="ROTATE" value="OPERATION"/>
+  <constant name="ROTATE" value="OPERATIONPlus"/>
+  <constant name="ROTATE" value="OPERATIONMinus"/>
+  <constant name="ROTATE" value="0"/>
+  -->
+
   <constant name="ROTATE" value="OPERATION"/>
 
   <variable name="i" value="0"/>
@@ -37,6 +60,8 @@
 
   <position name="GEMTrackingPlane1_pos" z="0.0" unit="m"/>
   <position name="GEMTrackingPlane2_pos" z="0.5" unit="m"/>
+
+
 </define>
 
 <materials>
@@ -83,7 +108,7 @@
 <tube
 	name="GEMTrackingWorld_solid"
 	startphi="0" deltaphi="360" aunit="deg"
-    rmin="610" rmax="2000" z="200" lunit="mm"/>
+    rmin="610" rmax="2000" z="500" lunit="mm"/>
 
 <!--
   <box name="GEMTrackingWorld_solid"
@@ -92,7 +117,7 @@
 
   <tube name="GEMTrackingPlane_sol"
     startphi="0" deltaphi="360" aunit="deg"
-    rmin="650" rmax="1900" z="100" lunit="mm"/>
+    rmin="650" rmax="1900" z="500" lunit="mm"/>
 
   <box name="GEMDetector_sol" x="GEMFrameOuterLength" y="GEMFrameOuterWidth" z="10.0*cm"/>
 
@@ -141,22 +166,54 @@
   <box name="GEMKaptonCathodeFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonCathodeThickness"/>
   <box name="GEMKaptonMiddleFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonMiddleThickness"/>
   <box name="GEMKaptonAnodeFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonAnodeThickness"/>
+
+  <!-- Ribs on the frame -->
+
+  <box lunit="mm" name="frame_rib0x5629e109b140" x="1" y="486" z="1"/>
+  <box lunit="mm" name="frame_rib0x5629e1086e20" x="380" y="1" z="1"/>
+  <union name="frame_all_tmp0x5629e109ccd0">
+    <first ref="frame_rib0x5629e109b140"/>
+    <second ref="frame_rib0x5629e1086e20"/>
+    <position name="frame_all_tmp0x5629e109ccd0_pos" unit="mm" x="0" y="-75" z="0"/>
+  </union>
+  <box lunit="mm" name="frame_rib_20x5629e109b040" x="440" y="1" z="1"/>
+  <union name="frame_all0x5629e1021650">
+    <first ref="frame_all_tmp0x5629e109ccd0"/>
+    <second ref="frame_rib_20x5629e109b040"/>
+    <position name="frame_all0x5629e1021650_pos" unit="mm" x="0" y="75" z="0"/>
+  </union>
+
 </solids>
 
 <structure>
 
   <volume name="logic_GEM_Argon">
     <materialref ref="ArCO2"/>
+<!--
     <solidref ref="Frame_Boc_add0x5572e9984930"/>
+-->
+    <solidref ref="Box_add0x5572e9992d80"/>
     <auxiliary auxtype="SensDet" auxvalue="GEMArgonDet"/>
     <auxiliary auxtype="DetNo" auxvalue="577"/>
   </volume>
+
+  <volume name="logic_Rib">
+    <materialref ref="Al"/>
+    <solidref ref="frame_all0x5629e1021650"/>
+    <auxiliary auxtype="Color" auxvalue="yellow"/>
+  </volume>
+
+
+
+
+
 
   <volume name="logic_GEMFrame">
     <materialref ref="Al"/>
     <solidref ref="logic_AlMountFrame"/>
     <auxiliary auxtype="SensDet" auxvalue="GEMFrame"/>
     <auxiliary auxtype="DetNo" auxvalue="520"/>
+    <auxiliary auxtype="Color" auxvalue="yellow"/>
   </volume>
 
   <volume name="logic_GEMKaptonCathodeFoil">
@@ -200,6 +257,63 @@
     <auxiliary auxtype="Alpha" auxvalue="0.1"/>
   </volume>
 
+  <volume name="logic_GEMDetector_Argon_module">
+    <materialref ref="G4_AIR"/>
+
+<!--    
+      <volumeref name="logic_Frame" ref="logic_GEMFrame"/>
+      <position name="GEMArgon_Frame_pos" y="0"  z="10.0" unit="mm"/>
+-->   
+    <solidref ref="Frame_GEM_Argon_drift"/>
+
+    <physvol name="GEMDetector_Ar_phys_module">
+      <volumeref ref="logic_GEM_Argon"/>
+      <position name="GEMArgon_pos" y="0"  z="0.0" unit="mm"/>
+
+    </physvol>	
+    <auxiliary auxtype="Alpha" auxvalue="0.5"/>
+  </volume>
+
+
+  <volume name="logic_GEMFrame_module">
+    <materialref ref="Al"/>
+<!--    
+    <solidref ref="logic_AlMountFrame"/>
+-->   
+    <solidref ref="GEMTrackingPlane_sol"/>
+
+    <physvol name="Frame">
+			<volumeref ref="logic_GEMFrame"/>
+			<position name="frame_position" x="0" y="0" z="-20"/>
+    </physvol>	
+
+    <physvol name="argonCO2Volume">
+			<volumeref ref="logic_GEM_Argon"/>
+			<position name="gas_position" x="0" y="0" z="0"/>
+    </physvol>	
+
+    <physvol name="rib">
+			<volumeref ref="logic_Rib"/>
+			<position name="rib_position" x="0" y="880" z="-20"/>
+    </physvol>	
+
+
+
+
+
+
+    <auxiliary auxtype="Alpha" auxvalue="0.0"/>
+
+<!--    
+    <auxiliary auxtype="SensDet" auxvalue="GEMFrame"/>
+    <auxiliary auxtype="DetNo" auxvalue="520"/>
+
+-->   
+
+  </volume>
+
+
+
 <!--
   <volume name="logic_GEMTrackingPlane">
     <materialref ref="G4_AIR"/>
@@ -234,16 +348,56 @@
 -->
 
     <loop for="i" from="1" to="7" step="1">
-      <physvol name="GEMDetector_sector_phys[i+1]">
+      <physvol name="GEMDetector_sector_phys1[i+1]">
 
-        <volumeref ref="logic_GEMDetector_Argon"/> 
- <!--       <volumeref ref="logic_GEMFrame"/> -->
+       <volumeref ref="logic_GEMFrame_module"/> 
+  <!--
+       <volumeref ref="logic_GEMFrame"/> 
+       <volumeref ref="logic_GEMDetector_Argon_module"/> 
 
-        <position name="GEMDetector_sector_pos[i+1]" 
+       <volumeref ref="logic_GEMDetector_Argon"/> 
+       <volumeref ref="logic_GEMFrame"/> -->
+
+        <position name="GEMDetector_sector_pos1[i+1]" 
                   x="GEMPositionRadius*cos((i+2.75)*PHI+ROTATE)" 
-                  y="GEMPositionRadius*sin((i+2.75)*PHI+ROTATE)"/>
-        <rotation name="GEMDetector_sector_rot[i+1]" z="-(i+2.75)*PHI-ROTATE+2*pi/4" />
+                  y="GEMPositionRadius*sin((i+2.75)*PHI+ROTATE)"
+                  z="-220"/>
+        <rotation name="GEMDetector_sector_rot1[i+1]" z="-(i+2.75)*PHI-ROTATE+2*pi/4" />
       </physvol>	
+
+      <physvol name="TrigDetector_sector_phys[i+1]">
+
+  <!--
+       <volumeref ref="logic_GEMFrame_module"/> 
+       <volumeref ref="logic_GEMFrame"/> 
+       <volumeref ref="logic_GEMDetector_Argon_module"/> 
+
+       <volumeref ref="logic_GEMDetector_Argon"/> 
+       <volumeref ref="logic_GEMFrame"/> -->
+
+        <volumeref ref="logic_GEM_Argon"/>
+
+        <position name="TrigDetector_sector_pos[i+1]" 
+                  x="GEMPositionRadius*cos((i+2.75)*PHI+ROTATE)" 
+                  y="GEMPositionRadius*sin((i+2.75)*PHI+ROTATE)"
+                  z="150"/>
+        <rotation name="Trigetector_sector_rot[i+1]" z="-(i+2.75)*PHI-ROTATE+2*pi/4" />
+      </physvol>	
+
+
+   <!-- xxxxxxxxxxxxxxxxxxxx -->
+
+      <physvol name="GEMDetector_sector_phys2[i+1]">
+
+       <volumeref ref="logic_GEMFrame_module"/> 
+
+        <position name="GEMDetector_sector_pos2[i+1]" 
+                  x="GEMPositionRadius*cos((i+2.75)*PHI+ROTATE)" 
+                  y="GEMPositionRadius*sin((i+2.75)*PHI+ROTATE)"
+                  z="+220"/>
+        <rotation name="GEMDetector_sector_rot2[i+1]" z="-(i+2.75)*PHI-ROTATE+2*pi/4" />
+      </physvol>	
+
     </loop>
 
 <!--

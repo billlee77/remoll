@@ -124,6 +124,24 @@
   <box name="GEMKaptonCathodeFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonCathodeThickness"/>
   <box name="GEMKaptonMiddleFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonMiddleThickness"/>
   <box name="GEMKaptonAnodeFoil_sol" x="GEMFrameInnerLength" y="GEMFrameInnerWidth" z="GEMKaptonAnodeThickness"/>
+
+
+  <!-- Ribs on the frame -->
+
+  <box lunit="mm" name="frame_rib0x5629e109b140" x="1" y="486" z="1"/>
+  <box lunit="mm" name="frame_rib0x5629e1086e20" x="380" y="1" z="1"/>
+  <union name="frame_all_tmp0x5629e109ccd0">
+    <first ref="frame_rib0x5629e109b140"/>
+    <second ref="frame_rib0x5629e1086e20"/>
+    <position name="frame_all_tmp0x5629e109ccd0_pos" unit="mm" x="0" y="-75" z="0"/>
+  </union>
+  <box lunit="mm" name="frame_rib_20x5629e109b040" x="440" y="1" z="1"/>
+  <union name="frame_all0x5629e1021650">
+    <first ref="frame_all_tmp0x5629e109ccd0"/>
+    <second ref="frame_rib_20x5629e109b040"/>
+    <position name="frame_all0x5629e1021650_pos" unit="mm" x="0" y="75" z="0"/>
+  </union>
+
 </solids>
 
 <structure>
